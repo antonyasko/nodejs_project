@@ -1,9 +1,9 @@
 const { program } = require('commander');
 const fs = require('fs');
 
-const decoder = require('../modules/decoder');
-const shiftValidation = require('../modules/shiftValidation');
-const actionValidation = require('../modules/actionValidation');
+const decoder = require('./modules/decoder');
+const shiftValidation = require('./modules/shiftValidation');
+const actionValidation = require('./modules/actionValidation');
 
 const englishAlphabet = 'abcdefghijklmnopqrstuvwxyz';
 
