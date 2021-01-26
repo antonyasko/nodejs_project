@@ -20,7 +20,7 @@ let inputText;
 
 const options = {
   shift: null,
-  action: null
+  action: null,
 };
 
 const shiftStatus = shiftValidation(program.shift, options);
@@ -30,22 +30,16 @@ if (program.input && shiftStatus && actionStatus) {
   try {
     inputText = fs.readFileSync(program.input, 'utf-8');
 
-    inputText.split('').forEach(char => {
-      outputArrayOfChar.push(
-        decoder(options.shift, program.action, char, englishAlphabet)
-      );
+    inputText.split('').forEach((char) => {
+      outputArrayOfChar.push(decoder(options.shift, program.action, char, englishAlphabet));
     });
 
     program.output
       ? fs.writeFileSync(program.output, outputArrayOfChar.join(''), 'utf-8')
-      : process.stdout.write(
-          `Your ${program.action} data: ${outputArrayOfChar.join('')}`
-        );
+      : process.stdout.write(`Your ${program.action} data: ${outputArrayOfChar.join('')}`);
   } catch (error) {
     process.on('exit', () => {
-      process.stderr.write(
-        'Incorrect input. Enter the correct input and try again.'
-      );
+      process.stderr.write('Incorrect input. Enter the correct input and try again.');
       process.exit(1);
     });
   }
@@ -55,17 +49,13 @@ if (program.input && shiftStatus && actionStatus) {
 
   process.stdin.on('readable', () => {
     while ((inputText = process.stdin.read()) !== null) {
-      inputText.split('').forEach(char => {
-        outputArrayOfChar.push(
-          decoder(options.shift, program.action, char, englishAlphabet)
-        );
+      inputText.split('').forEach((char) => {
+        outputArrayOfChar.push(decoder(options.shift, program.action, char, englishAlphabet));
       });
 
       program.output
         ? fs.writeFileSync(program.output, outputArrayOfChar.join(''), 'utf-8')
-        : process.stdout.write(
-            `Your ${program.action} data: ${outputArrayOfChar.join('')}`
-          );
+        : process.stdout.write(`Your ${program.action} data: ${outputArrayOfChar.join('')}`);
 
       outputArrayOfChar.length = 0;
     }
