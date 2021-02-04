@@ -1,35 +1,41 @@
-const {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  removeUser
-} = require('../../common/inMemoryDB');
+const cloneDeep = require('lodash/cloneDeep');
 
-const getAll = async () => getAllUsers();
+const DATABASE = require('../../common/database');
+const User = require('./user.model');
 
-const getById = async (id) => {
-  try {
-    const user = await getUserById(id);
-    return user[0];
-  } catch (error) {
+const getAll = () => cloneDeep(DATABASE.users);
+
+const getById = (id) => getAll().find((user) => user.id === id);
+
+const update = (id, newData) => {
+  const index = DATABASE.users.findIndex((item) => item.id === id);
+  if (index === -1) {
     throw new Error(`User with id: ${id} was not found`);
+  } else {
+    DATABASE.users[index] = { ...newData };
+    return DATABASE.users[index];
   }
 };
 
-const create = async (data) => {
-  const newUser = await createUser(data);
-  return newUser[0];
+const create = (data) => {
+  const newUser = new User(data);
+  DATABASE.users.push(newUser);
+  return newUser;
 };
 
-const update = async (id, newData) => {
-  await updateUser(id, newData);
-  return await getById(id);
-};
-
-const remove = async (id) => {
-  const user = await removeUser(id);
-  return user[0];
+const remove = (id) => {
+  const index = DATABASE.users.findIndex((item) => item.id === id);
+  if (index === -1) {
+    throw new Error(`User with id: ${id} was not found`);
+  } else {
+    DATABASE.tasks = DATABASE.tasks.map((task) => {
+      if (task.userId === id) {
+        task.userId = null;
+      }
+      return task;
+    });
+    return DATABASE.users.splice(index, 1);
+  }
 };
 
 module.exports = { getAll, getById, create, update, remove };
